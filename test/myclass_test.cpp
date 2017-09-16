@@ -5,5 +5,11 @@
 #include <myclass.h>
 
 BOOST_AUTO_TEST_CASE(mytest) {
-	BOOST_CHECK(true);
+    Myclass<int> c { 1, 2, 3 };
+
+	BOOST_CHECK(c[0] == 1);
+    BOOST_CHECK(c[1] == 2);
+    BOOST_CHECK(c[2] == 3);
+
+    BOOST_CHECK(c.size() == 3);
 }
