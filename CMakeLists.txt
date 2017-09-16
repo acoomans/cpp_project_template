@@ -3,6 +3,7 @@ project(myproject LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 11)
 
 include(cmake/boost_tests.cmake)
+include(cmake/clang_analyzer.cmake)
 
 include_directories(src)
 
@@ -13,3 +14,4 @@ add_library(mylib ${SOURCE_FILES})
 		
 add_boost_test(test/myclass_test.cpp mylib)
 
+add_clang_static_analysis(mylib)
