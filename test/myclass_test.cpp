@@ -13,3 +13,11 @@ BOOST_AUTO_TEST_CASE(mytest) {
 
     BOOST_CHECK(c.size() == 3);
 }
+
+BOOST_AUTO_TEST_CASE(forloop) {
+    Myclass<int> c { 1, 2, 3 };
+
+    for (auto i : c) {
+        BOOST_CHECK(i);
+    }
+}

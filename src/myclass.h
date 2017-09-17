@@ -73,14 +73,7 @@ public:
     // write subscripting
     T& operator[](int idx) { return elements[idx]; };
 
-    // for-loop
-    T* begin(Myclass<T>& t) {
-        return t.size() ? &t[0] : nullptr;
-    };
 
-    T* end(Myclass<T>& t) {
-        return begin(t) + t.size();
-    };
 
     int size() { return s; };
 };
@@ -89,5 +82,17 @@ template <typename T>
 std::ostream& operator<<(std::ostream &os, Myclass<T>& m) {
     return os << "M(" << m.size() << ")";
 }
+
+// for-loop
+
+template <typename T>
+T* begin(Myclass<T>& t) {
+    return t.size() ? &t[0] : nullptr;
+};
+
+template <typename T>
+T* end(Myclass<T>& t) {
+    return begin(t) + t.size();
+};
 
 #endif // MYCLASS_H
