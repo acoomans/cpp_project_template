@@ -25,7 +25,7 @@ public:
     ~Myclass() { delete [] elements; };
 
     // copy constructor
-    Myclass(const Myclass& m) : s {m.s} {
+    Myclass(const Myclass& m) : s {m.s}, elements {new T[m.s]} {
         for (int i = 0; i < m.s; i++) {
             elements[i] = m.elements[i];
         }
