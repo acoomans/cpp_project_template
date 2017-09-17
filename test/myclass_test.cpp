@@ -2,6 +2,8 @@
 #define BOOST_TEST_MODULE "MyclassTest"
 #include <boost/test/unit_test.hpp>
 
+#include <iostream>
+
 #include <myclass.h>
 
 BOOST_AUTO_TEST_CASE(mytest) {
@@ -20,4 +22,10 @@ BOOST_AUTO_TEST_CASE(forloop) {
     for (auto i : c) {
         BOOST_CHECK(i);
     }
+}
+
+BOOST_AUTO_TEST_CASE(cout) {
+    Myclass<int> c { 1, 2, 3 };
+
+    std::cout << c << std::endl;
 }
