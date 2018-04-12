@@ -21,6 +21,6 @@ target_link_boost(myexecutable)
 
 add_library(mylib ${SOURCE_FILES})
 		
-add_boost_test(test/myclass_test.cpp mylib)
+add_boost_test(mylib test/myclass_test.cpp)
 
 add_clang_static_analysis(mylib)

@@ -1,30 +1,41 @@
 include(CTest)
 enable_testing()
-find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+
+set(Boost_USE_STATIC_LIBS OFF)
+set(Boost_USE_MULTITHREAD ON)
+
+find_package(Boost QUIET)
 
 if (Boost_FOUND)
-    include_directories(${Boost_INCLUDE_DIR})
-    set(Boost_USE_STATIC_LIBS OFF)
-    set(Boost_USE_MULTITHREAD ON)
+    find_package(Boost REQUIRED COMPONENTS unit_test_framework)
+    if (Boost_UNIT_TEST_FRAMEWORK_FOUND)
+        include_directories(${Boost_INCLUDE_DIR})
+    endif()
 endif()
 
-function(add_boost_test SOURCE_FILE_NAME DEPENDENCY_LIB)
-    if (Boost_FOUND)
-        get_filename_component(TEST_EXECUTABLE_NAME ${SOURCE_FILE_NAME} NAME_WE)
+function(add_boost_test TARGET)
+    set(TEST_FILES "${ARGN}")
 
-        add_executable(${TEST_EXECUTABLE_NAME} ${SOURCE_FILE_NAME})
-        target_link_libraries(${TEST_EXECUTABLE_NAME} ${DEPENDENCY_LIB} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+    if (Boost_UNIT_TEST_FRAMEWORK_FOUND)
 
-        file(READ "${SOURCE_FILE_NAME}" SOURCE_FILE_CONTENTS)
-        string(REGEX MATCHALL "BOOST_AUTO_TEST_CASE\\( *([A-Za-z_0-9]+) *\\)"
-                FOUND_TESTS ${SOURCE_FILE_CONTENTS})
+        foreach(TEST_FILE ${TEST_FILES})
 
-        foreach(HIT ${FOUND_TESTS})
-            string(REGEX REPLACE ".*\\( *([A-Za-z_0-9]+) *\\).*" "\\1" TEST_NAME ${HIT})
+            get_filename_component(TEST_EXECUTABLE_NAME ${TEST_FILE} NAME_WE)
 
-            add_test(NAME "${TEST_EXECUTABLE_NAME}.${TEST_NAME}"
-                    COMMAND ${TEST_EXECUTABLE_NAME}
-                    --run_test=${TEST_NAME} --catch_system_error=yes)
+            add_executable(${TEST_EXECUTABLE_NAME} ${TEST_FILE})
+            target_link_libraries(${TEST_EXECUTABLE_NAME} ${TARGET} ${Boost_UNIT_TEST_FRAMEWORK_LIBRARY})
+
+            file(READ "${TEST_FILE}" TEST_FILE_CONTENTS)
+            string(REGEX MATCHALL "BOOST_AUTO_TEST_CASE\\( *([A-Za-z_0-9]+) *\\)" FOUND_TESTS ${TEST_FILE_CONTENTS})
+
+            foreach(FOUND_TEST ${FOUND_TESTS})
+                string(REGEX REPLACE ".*\\( *([A-Za-z_0-9]+) *\\).*" "\\1" TEST_NAME ${FOUND_TEST})
+
+                add_test(
+                        NAME "${TEST_EXECUTABLE_NAME}.${TEST_NAME}"
+                        COMMAND ${TEST_EXECUTABLE_NAME} --run_test=${TEST_NAME} --catch_system_error=yes
+                )
+            endforeach()
         endforeach()
     endif()
 endfunction()
