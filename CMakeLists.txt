@@ -23,4 +23,4 @@ add_library(mylib ${SOURCE_FILES})
 		
 add_boost_test(mylib test/myclass_test.cpp)
 
-add_clang_static_analysis(mylib)
+add_static_analysis(mylib)
